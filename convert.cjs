@@ -49,14 +49,12 @@ const generateTheme = ({ variant, source }) => {
     };
   });
 
-  let count = 0;
   const xml = fs.readFileSync(`./defaults/${source}.xml`, "utf8");
   const parsed = convert.xml2json(xml, {
     compact: false,
     attributeValueFn: (text) => {
       if (typeof text === "string") {
         if (text.match(/#[0-9a-fA-F]{6,8}/g)) {
-          count += 1;
           let transparency = "";
           if (text.length == 9) {
             transparency = text.substring(7, 9);
@@ -87,7 +85,8 @@ const generateTheme = ({ variant, source }) => {
   });
 
   const result = convert.json2xml(parsed, { compact: false });
-  fs.writeFileSync(`Catppuccin_${variant}.xml`, result, "utf8");
+  fs.mkdirSync(`./dist`, { recursive: true });
+  fs.writeFileSync(`./dist/Catppuccin_${variant}.xml`, result, "utf8");
 };
 
 const colorSchemes = [
